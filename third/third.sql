@@ -22,7 +22,7 @@ CREATE TABLE firstNF_AudioTrackStore (
   OrderDate date NOT NULL,
   DeliveryAddress varchar(70) NOT NULL,
   OrderTrackQuantity int NOT NULL,
-  UNIQUE KEY `first_NF` (`ArtistId`, `AlbumId`, `TrackId`, `PlaylistId`, `OrderId`, `CustomerId`)
+  PRIMARY KEY `first_NF` (`ArtistId`, `AlbumId`, `TrackId`, `PlaylistId`, `OrderId`)
 );
 
 -- Заполняем
@@ -55,14 +55,13 @@ CREATE TABLE secondNF_Playlists (
   PlaylistName varchar(120) NOT NULL
 );
 CREATE TABLE secondNF_Orders (
-  OrderId int NOT NULL,
+  OrderId int NOT NULL PRIMARY KEY,
   CustomerId int NOT NULL,
   CustomerName varchar(60) NOT NULL,
   CustomerEmail varchar(60) NOT NULL,
   OrderDate date NOT NULL,
   DeliveryAddress varchar(70) NOT NULL,
-  OrderTrackQuantity int NOT NULL,
-  UNIQUE KEY `second_NF` (`OrderId`, `CustomerId`)
+  OrderTrackQuantity int NOT NULL
 );
 
 -- Заполняем
