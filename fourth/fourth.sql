@@ -58,7 +58,7 @@ SELECT Location, COUNT(Location)
 -- 8. Первых 10 пользователей с максимальной репутацией, а также количество вопросов, созданных ими.
 SELECT TOP 10 U.Reputation, U.DisplayName, COUNT(P.OwnerUserId)
   FROM Users AS U
-    INNER JOIN Posts AS P
+    LEFT OUTER JOIN Posts AS P
       ON P.PostTypeId = 1 AND P.OwnerUserId = U.Id
   GROUP BY U.Reputation, U.DisplayName
   ORDER BY U.Reputation DESC
@@ -75,8 +75,8 @@ SELECT P1.OwnerUserId
       ON P3.Id = P2.ParentId
       AND P3.PostTypeId = 1 -- страховочка
       AND P3.Tags LIKE '%<java>%'
-  GROUP BY P1.OwnerUserId, P1.Tags, P3.Tags
-  HAVING COUNT(P1.Tags) > 2 AND COUNT(P3.Tags) > 9
+  GROUP BY P1.OwnerUserId
+  HAVING COUNT(DISTINCT P1.Id) > 2 AND COUNT(DISTINCT P3.Id) > 9
 
 -- 10. Все пары пользователей, таких что каждый из двух оставил хотя бы один комментарий под некоторым ответом другого пользователя.
 SELECT C1.UserId, C2.UserId -- или P1.OwnerUserId, P2.OwnerUserId
@@ -92,7 +92,7 @@ SELECT C1.UserId, C2.UserId -- или P1.OwnerUserId, P2.OwnerUserId
       AND C2.UserId = P1.OwnerUserId
 
 -- 11. Количество вопросов, в которых выбранный ответ содержит в два или более раза меньше комментариев, чем некоторый другой ответ на этот же вопрос.
-SELECT COUNT(R.cnt) --  количество таких вопросов
+SELECT COUNT(DISTINCT R.cnt) --  количество таких вопросов
   FROM (SELECT P1.Id AS cnt -- выдаст список id вопросов удовлетворяющих требованию
         FROM Posts AS P1
           INNER JOIN Posts AS P2
